@@ -1,0 +1,218 @@
+Файл DataExtractor.java
+/*
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to 
+change this license
+* Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this 
+template
+*/
+package com.mycompany.laba4;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+/**
+*
+* @author gg
+*/
+public class DataExtractor {
+ Connection connection; 
+ public DataExtractor (Connection c){
+ this.connection = c ; 
+ }
+ public void getData (){
+ String selectTableSQL = "SELECT * from author;";
+ Statement stmnt;
+ ResultSet rs;
+ try {
+ stmnt= connection.createStatement();
+ rs=stmnt.executeQuery(selectTableSQL);
+ while (rs.next()) {
+ Integer id = rs.getInt("id");
+ String first_name = rs.getString("first_name");
+ String last_name = rs.getString("last_name");
+ String middle_name = rs.getString("middle_name");
+ System.out.println("id: " + id + ", first_name: " + first_name +", 
+middle_name: " + middle_name + ", last_name: " + last_name); 
+ }
+ System.out.println("------");
+ } catch (SQLException e) {
+ System.out.println(e.getMessage());
+ }
+ }
+}
+Файл DataInsert.java
+/*
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to 
+change this license
+* Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this 
+template
+*/
+package com.mycompany.laba4;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+/**
+*
+* @author gg
+*/
+public class DataInsert {
+ Connection connection; 
+ public DataInsert (Connection c){
+ this.connection = c ; 
+ } 
+ public void insertAuthor(String first_name, String last_name, String 
+middle_name) {
+ try {
+ String insertSql = "insert into Author (first_name, last_name, 
+middle_name) values (?,?,?)" ;
+ PreparedStatement stmnt = connection.prepareStatement(insertSql) ;
+ stmnt.setString(1,first_name);
+ stmnt.setString(2,last_name);
+ stmnt.setString(3,middle_name);
+ stmnt.executeUpdate();
+ System.out.println("Author added");
+ } catch (SQLException e) {
+ System.out.println(e.getMessage());
+ }
+ }
+}
+Файл Database.java
+/*
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to 
+change this license
+* Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this 
+template
+*/
+package com.mycompany.laba4;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+/**
+*
+* @author gg
+*/
+public class Database {
+ public Database (){
+ try {
+ Class.forName("com.mysql.cj.jdbc.Driver");
+ System.out.println("driver found");
+ } catch(Exception e){
+ System.out.println("driver not found");
+ } 
+ } 
+ private String database_url = 
+"jdbc:mysql://127.0.0.1/library?characterEncoding=utf8";
+ private String un = "root";
+ private String psw = "Alexus2003";
+ 
+ 
+ public Connection getConnection (){
+ try {
+ Connection conn =DriverManager.getConnection(database_url,un, psw);
+ System.out.println("connection ok");
+ return conn; 
+ } catch (SQLException ex) {
+ System.out.println("connection failed");
+ return null;
+ } 
+ }
+ 
+}
+Файл Laba4.java
+/*
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to 
+change this license
+*/
+package com.mycompany.laba4;
+import java.sql.Connection;
+import java.io.PrintStream;
+import java.util.Scanner;
+/**
+*
+* @author gg
+*/
+public class Laba4 {
+ public static void main(String[] args) {
+ try {
+ System.setOut(new PrintStream(System.out, true, "UTF8"));
+ } catch (Exception e){} 
+ System.out.println("При віт");
+ Database database = new Database();
+ Connection c = database.getConnection();
+ DataExtractor de = new DataExtractor(c);
+ DataInsert di = new DataInsert(c);
+ Scanner input = new Scanner (System.in) ;
+ //di.insertAuthor("Test1", "Test1", "Tese1");
+ //de.getData();
+ Menu menu = new Menu() ;
+ while(true) {
+ int selection = menu.menu(); 
+ switch (selection) {
+ case 1: 
+ de.getData();
+ break;
+ case 2: 
+ System.out.print("new author firstname: ");
+ String first_name = input.nextLine();
+ System.out.print("new author lastname: ");
+ String last_name = input.nextLine();
+ System.out.print("new author middlename: ");
+ String middle_name = input.nextLine();
+ di.insertAuthor (first_name, last_name, middle_name);
+ break;
+ default: 
+ System.out.println("chosse entry from menu ");
+ }
+ }
+ }
+}
+Файл Menu.java
+/*
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to 
+change this license
+* Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this 
+template
+*/
+package com.mycompany.laba4;
+import java.util.Scanner;
+/**
+*
+* @author gg
+*/
+public class Menu {
+ public int menu(){
+ int selection ;
+ Scanner input = new Scanner (System.in) ;
+ System.out.println("1 - list all authors") ;
+ System.out.println("2 - create new authors") ;
+ System.out.print("choose menu item:");
+ selection = input.nextInt() ;
+ return selection ;
+ }
+}
+Файл pom.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.mycompany</groupId>
+ <artifactId>laba4</artifactId>
+ <version>1.0-SNAPSHOT</version>
+ <packaging>jar</packaging>
+ <dependencies>
+ <dependency>
+ <groupId>mysql</groupId>
+ <artifactId>mysql-connector-java</artifactId>
+ <version>8.0.33</version>
+ </dependency>
+ </dependencies>
+ <properties>
+ <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+ <maven.compiler.source>22</maven.compiler.source>
+ <maven.compiler.target>22</maven.compiler.target>
+ <exec.mainClass>com.mycompany.laba4.Laba4</exec.mainClass>
+ </properties>
+</project>
