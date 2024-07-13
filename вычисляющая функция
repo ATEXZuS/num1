@@ -1,0 +1,46 @@
+import math
+# Функция для вычисления точного значения
+def exact_value(x):
+ return math.exp(x)
+# Функция для вычисления значения ряда для заданного k
+def series_sum_k(x, k):
+ result = 0
+ for n in range(k):
+ result += (x ** n) / math.factorial(n)
+ return result
+# Функция для вычисления значения ряда до достижения точности e
+def series_sum_e(x, epsilon):
+ result = 0
+ n = 0
+ term = (x ** n) / math.factorial(n)
+ while abs(term) > epsilon:
+ result += term
+ n += 1
+ term = (x ** n) / math.factorial(n)
+ return result
+# Функция для вычисления относительной погрешности
+def relative_error(exact, approx):
+ return abs((exact - approx) / exact)
+# Основная программа
+def main():
+ a = float(input("Введите начальное значение a: "))
+ b = float(input("Введите конечное значение b: "))
+ step = float(input("Введите шаг n: "))
+ k = int(input("Введите количество членов ряда k: "))
+ epsilon = float(input("Введите точность epsilon: "))
+ 
+ x = a
+ print(f'{"X":<10} {"Y":<15} {"Y1":<15} {"Y2":<15} {"погр1":<15} {"погр2":<15}')
+ while x <= b:
+ y_exact = exact_value(x)
+ y1 = series_sum_k(x, k)
+ y2 = series_sum_e(x, epsilon)
+ error1 = relative_error(y_exact, y1)
+ error2 = relative_error(y_exact, y2)
+ 
+ print(f'{x:<10.5f} {y_exact:<15.10f} {y1:<15.10f} {y2:<15.10f} {error1:<15.10f} 
+{error2:<15.10f}')
+ 
+ x += step
+if __name__ == "__main__":
+ main()
