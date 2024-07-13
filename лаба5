@@ -1,0 +1,106 @@
+?xml version="1.0" encoding="UTF-8"?>
+<project-shared-configuration>
+ <!--
+This file contains additional configuration written by modules in the NetBeans 
+IDE.
+The configuration is intended to be shared among all the users of project and
+therefore it is assumed to be part of version control checkout.
+Without this configuration present, some functionality in the IDE may be limited 
+or fail altogether.
+-->
+ <properties xmlns="http://www.netbeans.org/ns/maven-properties-data/1">
+ <!--
+Properties that influence various parts of the IDE, especially code formatting and 
+the like. 
+You can copy and paste the single properties, into the pom.xml file and the IDE 
+will pick them up.
+That way multiple projects can share the same settings (useful for formatting rules 
+for example).
+Any value defined here will override the pom.xml file value but is only applicable 
+to the current project.
+-->
+ <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.8-
+web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
+ <org-netbeans-modules-mavenj2ee.netbeans_2e_hint_2e_deploy_2e_server>Tomcat</org-netbeans-modulesmaven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>
+ </properties>
+</project-shared-configuration>
+Файл pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.mycompany</groupId>
+ <artifactId>jspHello</artifactId>
+ <version>1.0-SNAPSHOT</version>
+ <packaging>war</packaging>
+ <name>jspHello</name>
+ <properties>
+ <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+ <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+ </properties>
+ 
+ <dependencies>
+ <dependency>
+ <groupId>com.mysql</groupId>
+ <artifactId>mysql-connector-j</artifactId>
+ <version>8.0.33</version>
+ </dependency>
+ <dependency>
+ <groupId>javax</groupId>
+ <artifactId>javaee-web-api</artifactId>
+ <version>7.0</version>
+ <scope>provided</scope>
+ </dependency>
+ </dependencies>
+ <build>
+ <plugins>
+ <plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-compiler-plugin</artifactId>
+ <version>3.10.1</version>
+ <configuration>
+ <source>1.8</source>
+ <target>1.8</target>
+ <compilerArguments>
+ <endorseddirs>${endorsed.dir}</endorseddirs>
+ </compilerArguments>
+ </configuration>
+ </plugin>
+ <plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-war-plugin</artifactId>
+ <version>3.3.2</version>
+ <configuration>
+ <failOnMissingWebXml>false</failOnMissingWebXml>
+ </configuration>
+ </plugin>
+ <plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-dependency-plugin</artifactId>
+ <version>2.6</version>
+ <executions>
+ <execution>
+ <phase>validate</phase>
+ <goals>
+ <goal>copy</goal>
+ </goals>
+ <configuration>
+ <outputDirectory>${endorsed.dir}</outputDirectory>
+ <silent>true</silent>
+ <artifactItems>
+ <artifactItem>
+ <groupId>javax</groupId>
+ <artifactId>javaee-endorsed-api</artifactId>
+ <version>7.0</version>
+ <type>jar</type>
+ </artifactItem>
+ </artifactItems>
+ </configuration>
+ </execution>
+ </executions>
+ </plugin>
+ </plugins>
+ </build>
+</project>
