@@ -1,0 +1,20 @@
+def contains_vowels(word):
+ vowels = "AEIOUYaeiouyАЕЁИОУЫЭЮЯаеёиоуыэюя"
+ for char in word:
+ if char in vowels:
+ return True
+ return False
+def main():
+ input_str = input("Введите строку: ")
+ # Разделение строки на слова, используя любые небуквенные символы как 
+разделители
+ words = input_str.split()
+ 
+ # Обработка слов и вывод тех, которые не содержат гласных букв
+ result = [word for word in words if not contains_vowels(word)]
+ 
+ print("Слова без гласных букв:")
+ for word in result:
+ print(word)
+if __name__ == "__main__":
+ main()
